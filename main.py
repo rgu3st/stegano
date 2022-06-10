@@ -41,6 +41,7 @@ class Stegano:
         self.test_message = "Hello Hidden World!\n"  # For the test, I'll stop at a new line character.
         self.label_image = ''
         self.filename = ''
+        self.encoded_filename = 'tmp1.png'
 
         self.APPFOLDER = ""
 
@@ -54,7 +55,8 @@ class Stegano:
         except FileNotFoundError:
             print('A parent path to %APPDATA% is somehow missing??')
 
-        self.filename = self.APPFOLDER + "tmp1.png"
+        self.filename = self.APPFOLDER + self.encoded_filename
+        #self.encoded_filename = self.APPFOLDER + 'tmp1.png'
 
     
     def encrypt_checkbox_handle(self):
@@ -138,9 +140,10 @@ class Stegano:
                     count += 1
                 
 
+        self.filename = self.APPFOLDER + self.encoded_filename
         print(f"Done encoding, saving to: {self.filename}")
         hidden_image_PIL = Image.fromarray(img_array)
-        hidden_image_PIL.save(self.APPFOLDER + 'tmp1.png')
+        hidden_image_PIL.save(self.filename)
         hidden_image = ImageTk.PhotoImage(hidden_image_PIL)
         
         print("Saved.")
@@ -192,11 +195,10 @@ class Stegano:
         message_ascii = ''.join(map(chr, message_bytes[0:-2]))
         print(f"Decoded message: {message_ascii}")
                 
-        
-
-        
+                
     def clear_messageBox(self, event):
         self.messageBox.delete(0.0, tk.END)
+
 
     # Create an event handler
     def handle_keypress(self, event):
@@ -343,7 +345,7 @@ class Stegano:
         )
 
     
-        # Bind keypress event to handle_keypress()
+        # Bindings
         window.bind("<Key>", self.handle_keypress)
 
         button_select_image.bind("<Button-1>", self.browseFiles)
@@ -352,15 +354,14 @@ class Stegano:
 
         button_decode_hidden.bind("<Button-1>", self.decode_hidden_message)
 
-
         self.messageBox.bind("<FocusIn>", self.clear_messageBox)
-        #self.messageBox.bind("<Leave>", update_message)
-        #self.messageBox.bind("<Any-KeyPress>", update_message)
         self.label_image.img = self.image1
 
+        # Actually start running with all the above UI/Settings
         window.mainloop()
 
 
 if __name__ == "__main__":
     stego1 = Stegano()
-    stego1.main()
+    stego1.main()  # This won't return until the TKInter window is closed
+
