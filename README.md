@@ -1,0 +1,2 @@
+# stegano
+Basic steganography project
